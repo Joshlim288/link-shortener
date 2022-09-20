@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'GovTech Url Shortener',
       theme: ThemeData(
-        primarySwatch: Colors.grey,
+        primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Url Shortener'),
     );
@@ -31,6 +31,53 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController inputController = TextEditingController();
+
+  Widget urlInputBar() {
+    return Flex(
+      mainAxisAlignment: MainAxisAlignment.center,
+      direction: Axis.horizontal,
+      children: [
+        Flexible(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1000),
+            child: Form(
+              key: formKey,
+              child: TextFormField(
+                decoration: const InputDecoration(
+                  hintText: 'e.g. http://www.google.com',
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey, width: 0.0),
+                  ),
+                  border: OutlineInputBorder(),
+                ),
+                controller: inputController,
+                maxLines: 1,
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a value';
+                  }
+                  return null;
+                },
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget submitButton() {
+    return ElevatedButton(
+      onPressed: () {},
+      child: const Padding(
+        padding: EdgeInsets.all(10),
+        child: Text(
+          'Get Shortened URL',
+          style: TextStyle(fontSize: 18),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,36 +113,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               const SizedBox(height: 20),
-              Flex(
-                mainAxisAlignment: MainAxisAlignment.center,
-                direction: Axis.horizontal,
-                children: [
-                  Flexible(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 1000),
-                      child: Form(
-                        key: formKey,
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey, width: 0.0),
-                            ),
-                            border: OutlineInputBorder(),
-                          ),
-                          controller: inputController,
-                          maxLines: 1,
-                          validator: (String? value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter a value';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              urlInputBar(),
+              const SizedBox(height: 20),
+              submitButton(),
             ],
           ),
         ),
