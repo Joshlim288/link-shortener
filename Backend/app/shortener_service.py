@@ -36,9 +36,9 @@ def shorten(url):
         return 'Not a valid URL', 400
     
     # check url exists in database -> we do this to maximise storage space
-    encodedId = data_access.getByLongUrl(url)
-    if encodedId:
-        return encodedId, 200
+    exiistingDoc = data_access.getByLongUrl(url)
+    if exiistingDoc:
+        return exiistingDoc['_id'], 200
 
     # get next id, and create the base62code
     nextId = data_access.getNextId()
