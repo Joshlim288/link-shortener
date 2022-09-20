@@ -11,7 +11,7 @@ If the url already exists in the database, return the same string to avoid redun
 '''
 def shorten(url):
     # validate url
-    # check url exists in database
+    # check url exists in database -> we do this to maximise storage space
     # get latest id, add 1 and create the base62code
     pass
 
