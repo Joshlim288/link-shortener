@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/alert_dialog.dart';
 import 'package:frontend/api_connection.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,14 +18,33 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Url Shortener'),
+      onGenerateRoute: (settings) {
+        List<String> pathComponents = settings.name!.split('/');
+        switch (settings.name) {
+          case '/':
+            return MaterialPageRoute(
+              builder: (context) => const MyHomePage(
+                title: 'Url Shortener',
+              ),
+            );
+            break;
+          default:
+            return MaterialPageRoute(
+              builder: (context) => MyHomePage(
+                title: 'Url Shortener',
+                code: pathComponents.last,
+              ),
+            );
+        }
+      },
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.title, this.code}) : super(key: key);
   final String title;
+  final String? code;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -33,6 +53,23 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController inputController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.code != null) {
+      ApiConnection.retrieveUrl(widget.code!, (response, statusCode) async {
+        if (statusCode == 200) {
+          final Uri url = Uri.parse(response);
+          if (!await launchUrl(url)) {
+            throw 'Could not launch $url';
+          }
+          if (!mounted) return;
+          Navigator.of(context).pop();
+        }
+      });
+    }
+  }
 
   Widget urlInputBar() {
     return Flex(
@@ -46,6 +83,8 @@ class _MyHomePageState extends State<MyHomePage> {
               key: formKey,
               child: TextFormField(
                 decoration: const InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
                   hintText: 'e.g. http://www.google.com',
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey, width: 0.0),
@@ -73,8 +112,8 @@ class _MyHomePageState extends State<MyHomePage> {
       onPressed: () async {
         await showDialog(
             context: context,
-            builder: (context) => const UrlAlertDialog(
-                  input: 'test',
+            builder: (context) => UrlAlertDialog(
+                  input: inputController.text,
                   apiCall: ApiConnection.shortenUrl,
                 ));
       },
@@ -91,44 +130,54 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 80,
-        elevation: 1,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Text(
-            widget.title,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
+      body: Stack(children: [
+        SizedBox.expand(
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: Image.asset(
+              'assets/background.jpg',
             ),
           ),
         ),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(30),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const Text(
-                'Enter a URL:',
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: '',
-                ),
-              ),
-              const SizedBox(height: 20),
-              urlInputBar(),
-              const SizedBox(height: 20),
-              submitButton(),
-            ],
+        const Center(
+          child: Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+            color: Colors.black54,
+            child: SizedBox(width: 1250, height: 400),
           ),
         ),
-      ),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(30),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Text(
+                  'URL SHORTENER',
+                  style: TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 60),
+                const Text(
+                  'Enter a URL:',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                urlInputBar(),
+                const SizedBox(height: 20),
+                submitButton(),
+              ],
+            ),
+          ),
+        ),
+      ]),
     );
   }
 }
