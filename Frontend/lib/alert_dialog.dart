@@ -14,6 +14,7 @@ class UrlAlertDialog extends StatefulWidget {
 }
 
 class UrlAlertDialogState extends State<UrlAlertDialog> {
+  /// Variables used for tracking progress of the request, and what to display for each outcome
   bool isLoading = true;
   String? responseText;
   int? responseCode;
@@ -21,6 +22,7 @@ class UrlAlertDialogState extends State<UrlAlertDialog> {
   TextStyle titleStyle = const TextStyle(fontWeight: FontWeight.bold);
   String frontendUrl = (const String.fromEnvironment('FRONTEND_URL')).length != 0 ? const String.fromEnvironment('FRONTEND_URL') : "http://localhost:8080/";
 
+  /// Callback function passed to the request, will be called with the retrieved when request is complete
   void callback(String response, int statusCode) {
     setState(() {
       responseCode = statusCode;
@@ -38,7 +40,7 @@ class UrlAlertDialogState extends State<UrlAlertDialog> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      // Still loading
+      /// Still loading
       title = Text('Loading', style: titleStyle);
       body = Column(
         mainAxisSize: MainAxisSize.min,
@@ -46,7 +48,7 @@ class UrlAlertDialogState extends State<UrlAlertDialog> {
       );
     } else {
       if (responseCode != 200) {
-        // Request error
+        /// Request error
         title = Column(
           children: const [
             Icon(Icons.error, color: Colors.red, size: 30),
@@ -59,7 +61,7 @@ class UrlAlertDialogState extends State<UrlAlertDialog> {
           children: [Text(responseText!)],
         );
       } else {
-        // Request succeeded, display shortened url
+        /// Request succeeded, display shortened url
         responseText = '$frontendUrl#/${responseText!}';
         title = Column(
           children: const <Widget>[
@@ -83,6 +85,7 @@ class UrlAlertDialogState extends State<UrlAlertDialog> {
       }
     }
 
+    /// Skeleton for the alert dialog, defines the overall structure
     return AlertDialog(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10)),

@@ -18,6 +18,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+
+      /// For redirection from shortened url to original url
       onGenerateRoute: (settings) {
         List<String> pathComponents = settings.name!.split('/');
         switch (settings.name) {
@@ -57,6 +59,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+
+    /// For redirection from shortened url to original url
     if (widget.code != null) {
       ApiConnection.retrieveUrl(widget.code!, (response, statusCode) async {
         if (statusCode == 200) {
@@ -71,6 +75,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  /// Called on enter or on pressing the submit button
+  /// Submits entered url to the backend
   void submitData() async {
     showDialog(
       context: context,
@@ -137,6 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(children: [
+        /// Image background
         SizedBox.expand(
           child: FittedBox(
             fit: BoxFit.cover,
@@ -145,6 +152,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
+
+        /// Rounded rectangle background for the text
         const Center(
           child: Card(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -152,6 +161,8 @@ class _MyHomePageState extends State<MyHomePage> {
             child: SizedBox(width: 1250, height: 400),
           ),
         ),
+
+        /// Text and url input box
         Center(
           child: Padding(
             padding: const EdgeInsets.all(30),
