@@ -71,6 +71,16 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void submitData() async {
+    showDialog(
+      context: context,
+      builder: (context) => UrlAlertDialog(
+        input: inputController.text,
+        apiCall: ApiConnection.shortenUrl,
+      ),
+    );
+  }
+
   Widget urlInputBar() {
     return Flex(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -82,6 +92,9 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Form(
               key: formKey,
               child: TextFormField(
+                onFieldSubmitted: (value) {
+                  submitData();
+                },
                 decoration: const InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -109,14 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget submitButton() {
     return ElevatedButton(
-      onPressed: () async {
-        await showDialog(
-            context: context,
-            builder: (context) => UrlAlertDialog(
-                  input: inputController.text,
-                  apiCall: ApiConnection.shortenUrl,
-                ));
-      },
+      onPressed: submitData,
       child: const Padding(
         padding: EdgeInsets.all(10),
         child: Text(
