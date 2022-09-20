@@ -1,5 +1,6 @@
 '''
-Contains the API definitions to request data from the server
+API CONTROLLER
+Single responsibility of extracting user input from API requests
 '''
 # library imports
 from flask import Flask, request, jsonify

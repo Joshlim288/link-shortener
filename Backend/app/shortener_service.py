@@ -1,6 +1,6 @@
 '''
 SHORTENER SERVICE
-Contains the main business logic for the application
+Single responsibility of performing the actual main business logic for the application, handling shortened URLs
 '''
 
 '''
