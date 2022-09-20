@@ -25,9 +25,12 @@ class ScoreControllerCase(unittest.TestCase):
     def testShortenUrlUrlExists(self, mock_DAL):
         from shortener_service import shorten
         # setup mock DAL
-        mock_DAL.getByLongUrl.return_value = 'Existing Document'
+        mock_DAL.getByLongUrl.return_value = {
+            '_id': 0,
+            '_url': 'http://www.google.com'
+        }
         response = shorten('http://www.google.com')
-        assert response[1] == 200, 'Does not return existing value, got: ' + str(response)
+        assert response == (0, 200), 'Does not return existing value, got: ' + str(response)
     
     @mock.patch('shortener_service.data_access')
     def testShortenUrlNewUrl(self, mock_DAL):
