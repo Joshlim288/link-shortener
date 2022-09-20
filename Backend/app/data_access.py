@@ -57,9 +57,7 @@ This is to ensure the indexes are setup properly, so looking up both original
 and shortened urls are done on an index
 '''
 def initCollection():
-    try:
-        db.validate_collection("adminCollection")  # Try to validate a collection
-    except pymongo.errors.OperationFailure:  # If the collection doesn't exist
+    if not adminCollection.find_one():
         # Initialize the databases
         adminCollection.insert_one({
             '_id': 0,
@@ -68,5 +66,6 @@ def initCollection():
         # we need 2 indexes: one for searching if original URL already in database, another for retrieving said url with base62code
         # we will use base62code as the _id of documents, which is already automatically indexed
         urlCollection.create_index([('originalUrl', pymongo.TEXT)], name='originalUrl_index', default_language='english')
-        global initialized
-        initialized = True
+
+    global initialized
+    initialized = True
