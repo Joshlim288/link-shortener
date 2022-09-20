@@ -15,7 +15,7 @@ class ApiConnection {
 
   /// enter match results into the system
   static Future<void> retrieveUrl(String base62code, Function(String, int) callback) async {
-    var request = http.Request('POST', Uri.parse('$baseUrl/retrieve?base62code=$base62code'));
+    var request = http.Request('GET', Uri.parse('$baseUrl/retrieve?base62code=$base62code'));
     sendRequest(request, callback);
   }
 
