@@ -21,7 +21,7 @@ def landing_page():
 '''
 shorten the provided url, and get the assigned base62code
 '''
-@app.route("shorten", methods=['GET'])
+@app.route("/shorten", methods=['GET'])
 def shorten():
     args = request.args
     url = args.get('url')
@@ -30,7 +30,7 @@ def shorten():
 '''
 get the url corresponding to the base62code previously issued
 '''
-@app.route("retrieve", methods=['GET'])
+@app.route("/retrieve", methods=['GET'])
 def shorten():
     args = request.args
     base62code = args.get('base62code')

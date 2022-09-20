@@ -31,7 +31,8 @@ Returns (Message, StatusCode)
 '''
 def shorten(url):
     # validate url
-    if not validators.url(url):
+    # validators package does not recognize google.com and some other valid formats, area for possible improvement
+    if not validators.url(url): 
         return 'Not a valid URL', 400
     
     # check url exists in database -> we do this to maximise storage space
