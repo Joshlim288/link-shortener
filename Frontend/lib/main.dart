@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/alert_dialog.dart';
+import 'package:frontend/api_connection.dart';
 
 void main() {
   runApp(const MyApp());
@@ -68,7 +70,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget submitButton() {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () async {
+        await showDialog(
+            context: context,
+            builder: (context) => const UrlAlertDialog(
+                  input: 'test',
+                  apiCall: ApiConnection.shortenUrl,
+                ));
+      },
       child: const Padding(
         padding: EdgeInsets.all(10),
         child: Text(
