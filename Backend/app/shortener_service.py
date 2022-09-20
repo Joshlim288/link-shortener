@@ -7,7 +7,7 @@ import validators
 import data_access
 
 # Constants
-ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 CODE_LENGTH = 7
 '''
 Handles the conversion from document ID (base10) to shortened code (currently base62)
