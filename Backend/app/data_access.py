@@ -15,10 +15,16 @@ urlCollection = db.urls
 adminCollection = db.admin
 
 '''
-Checks if there exists a shortened url that points to the same url
+Checks if there exists a shortened url that points to the same url, and returns the document if it exists
 '''
-def checkLongUrlExists(longUrl):
-    return urlCollection.find_one({'originalUrl': longUrl})!=None
+def getByLongUrl(longUrl):
+    return urlCollection.find_one({'originalUrl': longUrl})
+
+'''
+Checks if there exists a shortened url that points to the same url, and returns the document if it exists
+'''
+def getByBase62Code(base62code):
+    return urlCollection.find_one({'_id': base62code})
 
 '''
 Get the latest entry id from the admin collection.
