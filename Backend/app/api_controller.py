@@ -40,5 +40,4 @@ def retrieve():
 Entry point for the application
 '''
 if __name__ == "__main__":
-    data_access.initCollection()
     app.run(port=int(os.getenv('PORT')))
