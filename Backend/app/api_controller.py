@@ -5,9 +5,11 @@ Single responsibility of extracting user input from API requests
 # library imports
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import os
 
 # project imports
-from shortener_service import *
+import shortener_service
+import data_access
 
 app = Flask(__name__)
 CORS = CORS(app)
@@ -23,7 +25,7 @@ shorten the provided url, and get the assigned base62code
 def shorten():
     args = request.args
     url = args.get('url')
-    return shorten(url)
+    return shortener_service.shorten(url)
 
 '''
 get the url corresponding to the base62code previously issued
@@ -32,4 +34,11 @@ get the url corresponding to the base62code previously issued
 def shorten():
     args = request.args
     base62code = args.get('base62code')
-    return retrieve(base62code)
+    return shortener_service.retrieve(base62code)
+
+'''
+Entry point for the application
+'''
+if __name__ == "__main__":
+    data_access.initCollection()
+    app.run(port=int(os.getenv('PORT')))
