@@ -31,7 +31,7 @@ def shorten():
 get the url corresponding to the base62code previously issued
 '''
 @app.route("/retrieve", methods=['GET'])
-def shorten():
+def retrieve():
     args = request.args
     base62code = args.get('base62code')
     return shortener_service.retrieve(base62code)
