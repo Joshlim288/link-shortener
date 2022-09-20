@@ -62,16 +62,47 @@ class _MyHomePageState extends State<MyHomePage> {
 
     /// For redirection from shortened url to original url
     if (widget.code != null) {
-      ApiConnection.retrieveUrl(widget.code!, (response, statusCode) async {
-        if (statusCode == 200) {
-          final Uri url = Uri.parse(response);
-          if (!await launchUrl(url)) {
-            throw 'Could not launch $url';
+      ApiConnection.retrieveUrl(
+        widget.code!,
+        (response, statusCode) async {
+          if (statusCode == 200) {
+            final Uri url = Uri.parse(response);
+            if (!await launchUrl(url)) {
+              throw 'Could not launch $url';
+            }
+          } else {
+            await showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+                title: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(
+                      Icons.warning_rounded,
+                      color: Colors.red,
+                      size: 30,
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Invalid URL',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('CLOSE'))
+                ],
+              ),
+            );
           }
           if (!mounted) return;
           Navigator.of(context).pop();
-        }
-      });
+        },
+      );
     }
   }
 
