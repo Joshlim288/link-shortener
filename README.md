@@ -13,8 +13,10 @@ Only Docker is currently required
 You may need to disable popup blockers for the redirection to work
 
 # Running the application
-The app has been deployed to Netlify and can be accessed [here](https://dcube-enp-url-shortener.netlify.app/#/) 
+The app has been deployed to Netlify at https://dcube-enp-url-shortener.netlify.app/#/ 
 
 ## Local run
 1. Navigate to `DcubeENP` directory and run `Docker compose up`
 2. Webapp can then be accessed at `localhost:8080`
+
+Do note that if you are on windows, you should run with powershell instead of command prompt.
