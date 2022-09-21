@@ -9,7 +9,7 @@ import pymongo
 import os
 
 
-client = pymongo.MongoClient(os.environ['ME_CONFIG_MONGODB_URL'])
+client = pymongo.MongoClient(os.environ.get('ME_CONFIG_MONGODB_URL', 'mongodb://admin:password@mongo:27017/'))
 db = client.url_database
 urlCollection = db.urls
 adminCollection = db.admin
