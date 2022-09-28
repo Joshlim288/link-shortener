@@ -3,6 +3,7 @@ SHORTENER SERVICE
 Single responsibility of handling shortened URLs, and calling the appropriate services to perform a high-level use case
 '''
 # library imports
+from datetime import datetime
 import validators
 import data_access
 
@@ -11,7 +12,7 @@ ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 CODE_LENGTH = 7
 '''
 Handles the conversion from document ID (base10) to shortened code (currently base62)
-We currently limit the result to be 7 characters long, to ensure url remains short. 26^7 can handle about 8 billion unique urls
+We currently limit the result to be 7 characters long, to ensure url remains short. 62^7 can handle about 8 billion unique urls
 We only need a one-way conversion, actual document ID is not used for anything at the moment
 '''
 def encode(num):
@@ -46,6 +47,13 @@ def shorten(url):
     data_access.addNewId(encodedId, url)
     return encodedId, 200
     
+'''
+Helper method to retrieve total seconds from a datetime
+'''
+def total_seconds(self):
+    """Total seconds in the duration."""
+    return ((self.days * 86400 + self.seconds) * 10**6 +
+        self.microseconds) / 10**6
 
 '''
 Returns a url when given a base62code from a previously shortened url
@@ -56,4 +64,17 @@ def retrieve(base62code):
     doc = data_access.getByBase62Code(base62code)
     if not doc:
         return 'Invalid url entered', 400
+
+    secondsAfter = (datetime.now() - doc['createdDateTime']).total_seconds()
+    accessCount = doc['accessCount']
+    # check if expired
+    if accessCount > 2:
+        data_access.deleteByID(doc['_id'])
+        return 'Links are only valid for 3 uses', 400
+    if secondsAfter > 60:
+        data_access.deleteByID(doc['_id'])
+        return 'Links are only valid 60 seconds after creation', 400
+
+    doc['accessCount'] += 1
+    data_access.updateEntry(doc)
     return doc['originalUrl'], 200

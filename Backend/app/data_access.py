@@ -5,6 +5,7 @@ Note that business logic should be abstracted from this Data Access Layer
 Single responsibility of managing the database
 '''
 # library imports
+from datetime import datetime
 import pymongo
 import os
 
@@ -23,6 +24,7 @@ def getByLongUrl(longUrl):
     if not initialized: initCollection()
     return urlCollection.find_one({'originalUrl': longUrl})
 
+       
 '''
 Checks if there exists a shortened url that points to the same url, and returns the document if it exists
 '''
@@ -41,6 +43,15 @@ def getNextId():
     adminCollection.update_one({'_id':0}, {"$set": {'lastId': id}}, upsert=False)
     return id
 
+
+def updateEntry(doc):
+    if not initialized: initCollection()
+    urlCollection.update_one({'_id':doc['_id']}, {"$set": {'accessCount': doc['accessCount']}}, upsert=False)
+
+def deleteByID(id):
+    if not initialized: initCollection()
+    urlCollection.delete_one({'_id': id})
+
 '''
 Inserts a new document into the urlCollection with the given details
 '''
@@ -49,6 +60,8 @@ def addNewId(base62code, originalUrl):
     urlCollection.insert_one({
         '_id': base62code,
         'originalUrl': originalUrl,
+        'createdDateTime': datetime.now(),
+        'accessCount': 0,
     })
 
 '''
