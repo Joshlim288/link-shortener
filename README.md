@@ -1,13 +1,17 @@
-# DCUBE/ENP Tech Assessment
-Url shortening webapp
+# URL Shortening Webapp
+Web application built using python for the backend, and flutter web for the frontend
+![image](https://user-images.githubusercontent.com/47893380/194532266-a6a78c2f-65de-4702-a257-8fdcc2666898.png)
 
-# Assumptions/Design Considerations
-Privacy and potential for abuse are not currently concerns.
-- Authentication can be added in an additional layer in the future
-- ID (and thus base62code) generation can be made to be more random by modifying `data_access.getNexId()` in the future, at the cost of more collisions as storage nears capacitiy
 
-A NoSQL database (mongoDB) was chosen instead of a relational database as the records are standalone documents with no relations between them.
-A NoSQL database would thus be more scalable, with more efficient retrieval.
+# Description
+Web application to shorten long urls. Built using:
+Frontend
+- Flutter web
+
+Backend
+- Python (Flask)
+- MongoDB
+
 # Requirements
 Only Docker is currently required
 You may need to disable popup blockers for the redirection to work
